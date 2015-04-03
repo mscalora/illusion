@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <style>
+        html { background: black; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            font-size: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        section {
+            height: 48px;
+        }
+
+        div {
+            height: 48px;
+            width: 48px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .x {
+            background: black;
+        }
+
+        .y {
+            background: white;
+        }
+
+        div:before {
+            position: absolute;
+            height: 10px;
+            width: 10px;
+            border-radius: 5px;
+            content: " ";
+            transition: top, left 300ms, 300ms;
+        }
+
+        div:after {
+            position: absolute;
+            height: 10px;
+            width: 10px;
+            border-radius: 5px;
+            content: " ";
+            transition: top, left 300ms, 300ms;
+        }
+
+        .x:before,
+        .x:after {
+            background: white;
+        }
+
+        .y:before,
+        .y:after {
+            background: black;
+        }
+
+        body.q .a:before,
+        body.s .a:after,
+        body.q .c:before,
+        body.s .c:after,
+        z { top:  2px; left:  2px; }
+        body.r .a:before,
+        body.t .a:after,
+        body.t .c:before,
+        body.r .c:after,
+        z { top:  2px; left: 36px; }
+        body.s .a:before,
+        body.q .a:after,
+        body.s .c:before,
+        body.q .c:after,
+        z { top: 36px; left: 36px; }
+        body.t .a:before,
+        body.r .a:after,
+        body.r .c:before,
+        body.t .c:after,
+        z { top: 36px; left:  2px; }
+
+        body.q .d:before,
+        body.s .d:after,
+        body.q .b:before,
+        body.s .b:after,
+        z { top: 36px; left:  2px; }
+        body.r .d:before,
+        body.t .d:after,
+        body.t .b:before,
+        body.r .b:after,
+        z { top:  2px; left:  2px; }
+        body.s .d:before,
+        body.q .d:after,
+        body.s .b:before,
+        body.q .b:after,
+        z { top:  2px; left: 36px; }
+        body.t .d:before,
+        body.r .d:after,
+        body.r .b:before,
+        body.t .b:after,
+        z { top: 36px; left: 36px; }
+
+
+    </style>
+</head>
+<body>
+</body>
+<script>
+    var sq = 48;
+    var dot = 10;
+    var inset = 2;
+    var win = $(window);
+    var body = $(document.body);
+
+    function reset() {
+        var i, j;
+        var w = win.width();
+        var h = win.height();
+
+        var x = Math.ceil(w/sq)+1 & ~1;
+        var y = Math.ceil(h/sq)+1 & ~1;
+        var s = '';
+        var cMap = {
+            true: { true: "a", false: "b" },
+            false: { true: "d", false: "c" }
+        };
+        var col = [' x', ' y'];
+        for (j = 0; j<y ; j++) {
+            s += '<section>';
+            for (i = 0; i < x; i++) {
+                s += '<div class="' + cMap[j < y / 2][i < x / 2] + col[(i+j)%2] + '"></div>';
+            }
+            s += "</section>\n";
+        }
+        $('body').html(s).css({
+            marginLeft: (w-sq*x)/2,
+            marginTop: (h-sq*y)/2
+        });
+    }
+
+    reset();
+
+    var t = 0;
+    var k = ['q', 'r', 's', 't'];
+    body.addClass(k[t]);
+    var int = setInterval(function(){
+        body.removeClass(k[t]);
+        t = (t+1) % 4;
+        body.addClass(k[t]);
+    },500);
+
+    var debounce;
+    $(window).on('resize',function(){
+        clearTimeout(debounce);
+        debounce = setTimeout(reset, 50);
+    });
+
+</script>
+</html>
